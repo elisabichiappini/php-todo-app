@@ -4,17 +4,34 @@ const { createApp } = Vue;
     data() {
       return {
         todos: [],
+        todo: ''
       }
     },
     methods: {
-      getTodo() {
-        axios.get('server.php').then(data => {
-          console.log(data);
-          this.todos = data.data;
+      getTodos() {
+        axios.get('server.php').then(response => {
+          console.log(response);
+          this.todos = response.data;
+        })
+      },
+      addTodo() {
+        const data = {
+          create: 1,
+          text: this.todo,
+        };
+        
+        axios
+        .post('server.php', data, {
+          headers: {
+            'Content-Type' : 'multipart/form-data',
+          }
+        })
+        .then((response) => {
+          this.todos = response.data;
         })
       }
     },
     created() {
-      this.getTodo();
+      this.getTodos();
     }
   }).mount('#app');
